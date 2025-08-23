@@ -23,7 +23,15 @@ const authenticateToken = (req, res, next) => {
     let statusCode = 403;
     let message = error.message;
     let object = error.code;
-    
+
+    console.log(
+      'error.code',
+      error.code,
+      'error.name',
+      error.name,
+      'error.message',
+      error.message)
+
     if (error.code === -1001) {
       statusCode = 401;
       message = 'Token expired';
