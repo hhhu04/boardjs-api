@@ -7,6 +7,7 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var gameRouter = require('./routes/game');
 
 var app = express();
 
@@ -18,5 +19,6 @@ app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/api/user', usersRouter);
+app.use('/api/game', gameRouter);
 
 module.exports = app;
