@@ -1,5 +1,5 @@
 const { createApiClient } = require('../utils/httpClient');
-const {exitsFavorites, deleteFavorite, addFavorite} = require("../models/Game");
+const {exitsFavorites, deleteFavorite, addFavorite, existsMyFavorite} = require("../models/Game");
 
 class GameService {
 
@@ -42,6 +42,15 @@ class GameService {
       throw error;
     }
 
+  }
+
+  async searchMyFavorite(idx, playerId) {
+    try {
+      return await existsMyFavorite(idx, playerId);
+    } catch (error) {
+      console.error('GameService - mergeFavorites error:', error.message);
+      throw error;
+    }
   }
 
 }

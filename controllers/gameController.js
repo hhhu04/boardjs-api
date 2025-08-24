@@ -7,6 +7,13 @@ class GameController {
       console.log('Request params:', req.query);
       req.query.apikey = process.env.CYPHERS;
       const data = await gameService.getPlayer(req.query);
+
+      if(req.user !== null){
+        const favorite = await gameService.searchMyFavorite(req.user.idx, data.playerId);
+        data.favorite = favorite;
+        console.log('favorite:', favorite)
+      }
+
       res.json(data);
     } catch (error) {
       console.error('Game Controller Error:', error.message);
