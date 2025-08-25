@@ -7,7 +7,7 @@ class GameService {
     this.neopleApiClient = createApiClient('https://api.neople.co.kr');
   }
 
-  async getPlayer(params = {}) {
+  async getCyphersPlayer(params = {}) {
     try {
       params.limit = 1
       let response = await this.neopleApiClient.get('/cy/players', { params });
@@ -18,6 +18,25 @@ class GameService {
       response = await this.neopleApiClient.get(`/cy/players/${playerId}`, { params });
 
       return response.data;
+    } catch (error) {
+      console.error('GameService - fetchCyphers error:', error.message);
+      throw error;
+    }
+  }
+
+  async getDnfPlayer(params = {}) {
+    try {
+      params.limit = 1
+      let response = await this.neopleApiClient.get('/df/servers/all/characters', { params });
+      return response.data.rows[0];
+
+      // const playerId = response.data.rows[0].playerId
+      //
+      // console.log('playerId:', playerId);
+      //
+      // response = await this.neopleApiClient.get(`/cy/players/${playerId}`, { params });
+      //
+      // return response.data;
     } catch (error) {
       console.error('GameService - fetchCyphers error:', error.message);
       throw error;
