@@ -5,8 +5,9 @@ class GameController {
   async getCyphers(req, res) {
     try {
       console.log('Request params:', req.query);
-      req.query.apikey = process.env.CYPHERS;
-      const data = await gameService.getPlayer(req.query);
+      let param = req.query;
+      param.apikey = process.env.CYPHERS;
+      const data = await gameService.getPlayer(param);
 
       if(req.user !== null){
         const favorite = await gameService.searchMyFavorite(req.user.idx, data.playerId);
