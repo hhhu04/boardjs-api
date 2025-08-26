@@ -58,8 +58,8 @@ jobs:
         run: |
           CONTAINER_NAME="${{ github.event.repository.name }}"
           
-          RESPONSE=$(curl -s "${{ secrets.PORTAINERURL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
-          -H "X-API-KEY: ${{ secrets.PORTAINERTOKEN }}")
+          RESPONSE=$(curl -s "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/containers/json?all=true" \
+          -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}")
           
           if echo "$RESPONSE" | jq empty 2>/dev/null; then
           CONTAINER_ID=$(echo "$RESPONSE" | jq -r '
