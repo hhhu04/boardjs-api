@@ -99,7 +99,7 @@ jobs:
             -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{
-              \"Image\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main\",
+              \"Image\": \"${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\",
               \"HostConfig\": {
                 \"NetworkMode\": \"local\",
                 \"PortBindings\": {
