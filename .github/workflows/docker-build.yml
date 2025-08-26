@@ -89,9 +89,9 @@ jobs:
           REGISTRY_ENCODED=$(echo "${{ env.REGISTRY }}" | sed 's|/|%2F|g')
           IMAGE_ENCODED=$(echo "${{ env.IMAGE_NAME }}" | sed 's|/|%2F|g')
           
-          curl -s -X POST "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create?fromImage=${REGISTRY_ENCODED}%2F${IMAGE_ENCODED}&tag=main" \
+          curl -s -X POST "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENV_NO }}/docker/images/create?fromImage=${REGISTRY_ENCODED}%2F${IMAGE_ENCODED}&tag=dev" \
           -H "X-API-KEY: ${{ secrets.PORTAINER_TOKEN }}" \
-          -H "Referer: ${{ secrets.PORTAINE_RURL }}"
+          -H "Referer: ${{ secrets.PORTAINER_URL }}"
 
       - name: Create new container
         run: |
