@@ -10,6 +10,7 @@ class GameService {
   async getCyphersPlayer(params = {}) {
     try {
       params.limit = 1
+      params.apikey = process.env.CYPHERS;
       let response = await this.neopleApiClient.get('/cy/players', { params });
       const playerId = response.data.rows[0].playerId
 
@@ -27,6 +28,7 @@ class GameService {
   async getDnfPlayer(params = {}) {
     try {
       params.limit = 1
+      params.apikey = process.env.DNF;
       let response = await this.neopleApiClient.get('/df/servers/all/characters', { params });
       return response.data.rows[0];
 
@@ -41,6 +43,19 @@ class GameService {
       console.error('GameService - fetchCyphers error:', error.message);
       throw error;
     }
+  }
+
+  async getCyphersMatchList(params = {}) {
+      try{
+          let playerId = params.playerId
+          params.apikey = process.env.CYPHERS;
+          delete params.playerId
+          let response = await this.neopleApiClient.get('/cy/players/'+playerId+'/matches',{ params });
+          return response.data;
+      }catch(error) {
+          console.error('GameService - fetchCyphers error:', error.message);
+          throw error;
+      }
   }
 
   async mergeFavorites(data) {
