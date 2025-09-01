@@ -62,6 +62,35 @@ class GameController {
     }
   }
 
+  async getLol(req, res) {
+      try{
+          let param = req.query;
+          const data = await gameService.getLolPlayer(param);
+          
+          if(req.user !== null){
+              const favorite = await gameService.searchMyFavorite(req.user.idx, data.puuid);
+              data.favorite = favorite;
+              console.log('favorite:', favorite)
+          }
+          
+          res.json(data);
+      }catch (error) {
+          handleControllerError(error, res, 'Failed to fetch Lol');
+      }
+  }
+
+  async getLolMatchList(req, res) {
+      try{
+          let param = req.query;
+          const data = await gameService.getLolPlayerMatchList(param,req.params.puuid);
+
+          res.json(data);
+      }
+      catch(error){
+          handleControllerError(error, res, 'Failed to fetch LolMatchList');
+      }
+  }
+
   async mergeFavorites(req, res) {
     try {
       console.log('Request params:', req.body);

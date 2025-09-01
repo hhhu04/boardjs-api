@@ -5,6 +5,7 @@ class GameService {
 
   constructor() {
     this.neopleApiClient = createApiClient('https://api.neople.co.kr');
+    this.riotApiClient = createApiClient('https://asia.api.riotgames.com');
   }
 
   async getCyphersPlayer(params = {}) {
@@ -109,6 +110,54 @@ class GameService {
     }
 
   }
+
+  async getLolPlayer(params = {}) {
+
+      try{
+          let gameName = params.gameName
+          let tag = params.tag
+          delete params.tag
+          delete params.gameName
+          params.api_key = process.env.LOL
+          let response = await this.riotApiClient(`/riot/account/v1/accounts/by-riot-id/${gameName}/${tag}`, { params });
+
+          return response.data;
+      }
+      catch (error) {
+          console.error('GameService - getLolPlayer error:', error.message);
+          throw error;
+      }
+
+  }
+
+  async getLolPlayerMatchList(params = {},puuid) {
+      try{
+          if(!params.start){
+              params.start = 0
+          }
+          params.count = 10
+          params.api_key = process.env.LOL
+          let responseMatchList = await this.riotApiClient(`/lol/match/v5/matches/by-puuid/${puuid}/ids`, { params });
+
+          let matchIdList = responseMatchList.data
+
+          delete params.start
+          delete params.count
+
+          let matchList = []
+          for(let i = 0; i < matchIdList.length; i++){
+              const response = await this.riotApiClient(`/lol/match/v5/matches/${matchIdList[i]}`, { params });
+              matchList.push(response.data);
+          }
+
+          return matchList;
+      }
+      catch (error) {
+          console.error('GameService - getLolPlayer error:', error.message);
+          throw error;
+      }
+  }
+
 
   async searchMyFavorite(idx, playerId) {
     try {
