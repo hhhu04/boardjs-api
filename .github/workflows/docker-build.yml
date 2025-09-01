@@ -34,7 +34,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
+            type=ref,event=branch,value=dev
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -52,6 +52,7 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             CYPHERS=${{ secrets.CYPHERS }}
             DNF=${{ secrets.DNF }}
+            LOL=${{ secrets.LOL }}
 
       - name: Get existing container ID
         id: get_container
