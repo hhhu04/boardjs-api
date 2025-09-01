@@ -5,8 +5,6 @@ const { authenticateToken } = require('../middleware/auth');
 const {findByUserId, joinUser} = require("../models/User");
 const bcrypt = require('bcryptjs');
 
-
-/* GET user info. */
 router.get('/info', authenticateToken, async function(req, res, next) {
   try {
     const tokenInfo = req.user;
