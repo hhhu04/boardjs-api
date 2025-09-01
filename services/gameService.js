@@ -50,10 +50,42 @@ class GameService {
           let playerId = params.playerId
           params.apikey = process.env.CYPHERS;
           delete params.playerId
-          let response = await this.neopleApiClient.get('/cy/players/'+playerId+'/matches',{ params });
+          let response = await this.neopleApiClient.get(`/cy/players/${playerId}/matches`,{ params });
           return response.data;
       }catch(error) {
-          console.error('GameService - fetchCyphers error:', error.message);
+          console.error('GameService - getCyphersMatchList error:', error.message);
+          throw error;
+      }
+  }
+
+  async getCyphersMatchDetail(params = {}) {
+      try{
+          let matchId = params.matchId
+          delete params.matchId
+          params.apikey = process.env.CYPHERS;
+          let response = await this.neopleApiClient.get(`/cy/matches/${matchId}`,{params});
+
+          let result = response.data;
+          let data = {}
+          if(result){
+              let teamA = result.teams[0]
+              let teamB = result.teams[1]
+
+              let players = result.players
+
+              let arrA = players.filter(player => player.teamId === teamA.teamId)
+              let arrB = players.filter(player => player.teamId === teamB.teamId)
+
+              data = {
+                  teamA: { ...teamA, players: arrA },
+                  teamB: { ...teamB, players: arrB }
+              }
+          }
+
+          return data;
+      }
+      catch(error) {
+          console.error('GameService - getCyphersMatchDetail error:', error.message);
           throw error;
       }
   }

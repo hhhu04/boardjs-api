@@ -1,4 +1,5 @@
 const gameService = require('../services/gameService');
+const { handleControllerError } = require('../utils/errorHandler');
 
 class GameController {
 
@@ -16,19 +17,7 @@ class GameController {
 
       res.json(data);
     } catch (error) {
-      console.error('Game Controller Error:', error.message);
-      
-      if (error.response) {
-        res.status(error.response.status).json({
-          error: 'API request failed',
-          message: error.response.data || error.message
-        });
-      } else {
-        res.status(500).json({
-          error: 'Internal server error',
-          message: 'Failed to fetch cyphers data'
-        });
-      }
+      handleControllerError(error, res, 'Failed to fetch cyphers data');
     }
   }
 
@@ -39,20 +28,20 @@ class GameController {
 
             res.json(data);
         }catch(error){
-            console.error('Game Controller Error:', error.message);
-
-            if (error.response) {
-                res.status(error.response.status).json({
-                    error: 'API request failed',
-                    message: error.response.data || error.message
-                });
-            } else {
-                res.status(500).json({
-                    error: 'Internal server error',
-                    message: 'Failed to fetch cyphers data'
-                });
-            }
+            handleControllerError(error, res, 'Failed to fetch cyphers data');
         }
+  }
+
+  async getCyphersMatchDetail(req, res) {
+      try{
+          let matchId = req.params.matchId;
+          let param = {matchId: matchId};
+          const data = await gameService.getCyphersMatchDetail(param);
+
+          res.json(data);
+      }catch(error){
+          handleControllerError(error, res, 'Failed to fetch cyphers data');
+      }
   }
 
   async getDnf(req, res) {
@@ -69,19 +58,7 @@ class GameController {
 
       res.json(data);
     } catch (error) {
-      console.error('Game Controller Error:', error.message);
-
-      if (error.response) {
-        res.status(error.response.status).json({
-          error: 'API request failed',
-          message: error.response.data || error.message
-        });
-      } else {
-        res.status(500).json({
-          error: 'Internal server error',
-          message: 'Failed to fetch cyphers data'
-        });
-      }
+      handleControllerError(error, res, 'Failed to fetch dnf data');
     }
   }
 
@@ -92,11 +69,7 @@ class GameController {
       const data = await gameService.mergeFavorites(req.body.params);
       res.json(data);
     } catch (error) {
-      console.error('Game Controller Error:', error.message);
-      res.status(500).json({
-        error: 'Internal server error',
-        message: 'Failed to fetch cyphers data'
-      });
+      handleControllerError(error, res, 'Failed to merge favorites');
     }
   }
 

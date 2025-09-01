@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/cyphers', optionalAuth, gameController.getCyphers);
 router.get('/cyphers/match', gameController.getCyphersMatchList)
+router.get('/cyphers/match/:matchId', gameController.getCyphersMatchDetail)
 router.get('/dnf', optionalAuth, gameController.getDnf);
 router.post('/favorites', authenticateToken, gameController.mergeFavorites)
 
