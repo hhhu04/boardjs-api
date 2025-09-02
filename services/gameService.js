@@ -6,6 +6,7 @@ class GameService {
   constructor() {
     this.neopleApiClient = createApiClient('https://api.neople.co.kr');
     this.riotApiClient = createApiClient('https://asia.api.riotgames.com');
+    this.lolApiClient = createApiClient('https://kr.api.riotgames.com');
   }
 
   async getCyphersPlayer(params = {}) {
@@ -121,7 +122,11 @@ class GameService {
           params.api_key = process.env.LOL
           let response = await this.riotApiClient(`/riot/account/v1/accounts/by-riot-id/${gameName}/${tag}`, { params });
 
-          return response.data;
+          let puuid = response.data.puuid
+
+          let response2 = await this.lolApiClient(`/lol/summoner/v4/summoners/by-puuid/${puuid}`, { params })
+
+          return response2.data;
       }
       catch (error) {
           console.error('GameService - getLolPlayer error:', error.message);
