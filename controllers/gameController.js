@@ -3,6 +3,7 @@ const { handleControllerError } = require('../utils/errorHandler');
 
 class GameController {
 
+    //cy
   async getCyphers(req, res) {
     try {
       console.log('Request params:', req.query);
@@ -44,6 +45,8 @@ class GameController {
       }
   }
 
+
+//dnf
   async getDnf(req, res) {
     try {
       console.log('Request params:', req.query);
@@ -62,6 +65,33 @@ class GameController {
     }
   }
 
+  async getDnfTimeline(req, res) {
+      try {
+          let param = req.query;
+          const data = await gameService.getDnfTimeline(param);
+
+          res.json(data);
+      }
+      catch (error) {
+          handleControllerError(error, res, 'Failed to fetch dnf detail');
+      }
+  }
+
+  async getDnfDetail(req, res) {
+      try {
+          let param = req.query;
+          const data = await gameService.getDnfDetail(param);
+
+          res.json(data);
+      }
+      catch (error) {
+          handleControllerError(error, res, 'Failed to fetch dnf detail');
+      }
+  }
+
+
+
+  //lol
   async getLol(req, res) {
       try{
           let param = req.query;
