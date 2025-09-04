@@ -8,6 +8,8 @@ router.get('/cyphers/match', gameController.getCyphersMatchList)
 router.get('/cyphers/match/:matchId', gameController.getCyphersMatchDetail)
 
 router.get('/dnf', optionalAuth, gameController.getDnf);
+router.get('/dnf/timeline', gameController.getDnfTimeline);
+router.get('/dnf/detail', gameController.getDnfDetail);
 
 router.get('/lol', optionalAuth, gameController.getLol)
 router.get('/lol/:puuid', gameController.getLolMatchList)

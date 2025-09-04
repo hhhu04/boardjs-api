@@ -27,70 +27,124 @@ class GameService {
     }
   }
 
+    async getCyphersMatchList(params = {}) {
+        try{
+            let playerId = params.playerId
+            params.apikey = process.env.CYPHERS;
+            delete params.playerId
+            let response = await this.neopleApiClient.get(`/cy/players/${playerId}/matches`,{ params });
+            return response.data;
+        }catch(error) {
+            console.error('GameService - getCyphersMatchList error:', error.message);
+            throw error;
+        }
+    }
+
+    async getCyphersMatchDetail(params = {}) {
+        try{
+            let matchId = params.matchId
+            delete params.matchId
+            params.apikey = process.env.CYPHERS;
+            let response = await this.neopleApiClient.get(`/cy/matches/${matchId}`,{params});
+
+            let result = response.data;
+            let data = {}
+            if(result){
+                let teamA = result.teams[0]
+                let teamB = result.teams[1]
+
+                let players = result.players
+
+                let arrA = players.filter(player => player.teamId === teamA.teamId)
+                let arrB = players.filter(player => player.teamId === teamB.teamId)
+
+                data = {
+                    teamA: { ...teamA, players: arrA },
+                    teamB: { ...teamB, players: arrB }
+                }
+            }
+
+            return data;
+        }
+        catch(error) {
+            console.error('GameService - getCyphersMatchDetail error:', error.message);
+            throw error;
+        }
+    }
+
+
+
   async getDnfPlayer(params = {}) {
     try {
       params.limit = 1
       params.apikey = process.env.DNF;
       let response = await this.neopleApiClient.get('/df/servers/all/characters', { params });
-      return response.data.rows[0];
+      return response.data;
 
-      // const playerId = response.data.rows[0].playerId
-      //
-      // console.log('playerId:', playerId);
-      //
-      // response = await this.neopleApiClient.get(`/cy/players/${playerId}`, { params });
-      //
-      // return response.data;
     } catch (error) {
       console.error('GameService - fetchCyphers error:', error.message);
       throw error;
     }
   }
 
-  async getCyphersMatchList(params = {}) {
+  async getDnfTimeline(params = {}) {
       try{
-          let playerId = params.playerId
-          params.apikey = process.env.CYPHERS;
-          delete params.playerId
-          let response = await this.neopleApiClient.get(`/cy/players/${playerId}/matches`,{ params });
-          return response.data;
-      }catch(error) {
-          console.error('GameService - getCyphersMatchList error:', error.message);
-          throw error;
-      }
-  }
+          let characterId = params.characterId
+          let serverId = params.serverId
+          params.apikey = process.env.DNF;
+          delete params.characterId
+          delete params.serverIdspq
 
-  async getCyphersMatchDetail(params = {}) {
-      try{
-          let matchId = params.matchId
-          delete params.matchId
-          params.apikey = process.env.CYPHERS;
-          let response = await this.neopleApiClient.get(`/cy/matches/${matchId}`,{params});
+          let timeLine = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/timeline`, { params });
 
-          let result = response.data;
-          let data = {}
-          if(result){
-              let teamA = result.teams[0]
-              let teamB = result.teams[1]
-
-              let players = result.players
-
-              let arrA = players.filter(player => player.teamId === teamA.teamId)
-              let arrB = players.filter(player => player.teamId === teamB.teamId)
-
-              data = {
-                  teamA: { ...teamA, players: arrA },
-                  teamB: { ...teamB, players: arrB }
-              }
-          }
-
-          return data;
+          return timeLine.data.timeline;
       }
       catch(error) {
-          console.error('GameService - getCyphersMatchDetail error:', error.message);
+          console.error('GameService - getDnfDetail error:', error.message);
           throw error;
       }
   }
+
+  async getDnfDetail(params={}) {
+      try{
+          let characterId = params.characterId
+          let serverId = params.serverId
+          params.apikey = process.env.DNF;
+          delete params.characterId
+          delete params.serverIdspq
+
+          let status = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/status`, { params });
+          let equipment = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/equip/equipment`, { params });
+          let avatar = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/equip/avatar`, { params });
+          let creature = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/equip/creature`, { params });
+          let flag = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/equip/flag`, { params });
+          let skill = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/style`, { params });
+          let buffEquipment = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/buff/equip/equipment`, { params });
+          let buffAvatar = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/buff/equip/avatar`, { params });
+          let buffCreature = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/buff/equip/creature`, { params });
+
+          return {
+              equipment: equipment.data.equipment
+              , equipmentSet: equipment.data.setItemInfo
+              , status: status.data.status
+              , statusBuff: status.data.buff
+              , avatar: avatar.data.avatar
+              , creature: creature.data.creature
+              , flag: flag.data.flag
+              , skill: skill.data.skill
+              , buffEquipment: buffEquipment.data.skill
+              , buffAvatar: buffAvatar.data.skill
+              , buffCreature: buffCreature.data.skill
+          };
+      }
+      catch(error) {
+          console.error('GameService - getDnfDetail error:', error.message);
+          throw error;
+      }
+  }
+
+
+
 
   async mergeFavorites(data) {
     try {
