@@ -123,10 +123,15 @@ class GameService {
           let buffAvatar = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/buff/equip/avatar`, { params });
           let buffCreature = await this.neopleApiClient.get(`/df/servers/${serverId}/characters/${characterId}/skill/buff/equip/creature`, { params });
 
+          let character = status.data
+          let statusVal = character.status
+          delete character.status
+
           return {
-              equipment: equipment.data.equipment
+              character: character
+              , equipment: equipment.data.equipment
               , equipmentSet: equipment.data.setItemInfo
-              , status: status.data.status
+              , status: statusVal
               , statusBuff: status.data.buff
               , avatar: avatar.data.avatar
               , creature: creature.data.creature
