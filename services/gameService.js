@@ -223,9 +223,9 @@ class GameService {
   }
 
 
-  async searchMyFavorite(idx, playerId) {
+  async searchMyFavorite(idx, playerId, game_type) {
     try {
-      return await existsMyFavorite(idx, playerId);
+      return await existsMyFavorite(idx, playerId, game_type);
     } catch (error) {
       console.error('GameService - mergeFavorites error:', error.message);
       throw error;

@@ -1,9 +1,9 @@
 const db = require('../db');
 
-const existsMyFavorite = async (user_idx, game_key) => {
+const existsMyFavorite = async (user_idx, game_key, game_type) => {
     const [rows] = await db.execute(
-        'select exists(select * from user_favorites where user_idx = ? and game_key= ?) as exists_result',
-        [user_idx, game_key]
+        'select exists(select * from user_favorites where user_idx = ? and game_key= ? and game_type = ?) as exists_result',
+        [user_idx, game_key, game_type]
     );
     return rows[0].exists_result === 1;
 }

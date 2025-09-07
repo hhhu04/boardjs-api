@@ -11,7 +11,7 @@ class GameController {
       const data = await gameService.getCyphersPlayer(param);
 
       if(req.user !== null){
-        const favorite = await gameService.searchMyFavorite(req.user.idx, data.playerId);
+        const favorite = await gameService.searchMyFavorite(req.user.idx, data.playerId, 2);
         data.favorite = favorite;
         console.log('favorite:', favorite)
       }
@@ -54,9 +54,13 @@ class GameController {
       const data = await gameService.getDnfPlayer(param);
 
       if(req.user !== null){
-        const favorite = await gameService.searchMyFavorite(req.user.idx, data.characterId);
-        data.favorite = favorite;
-        console.log('favorite:', favorite)
+
+          for(var i=0; i<data.rows.length; i++){
+              const favorite = await gameService.searchMyFavorite(req.user.idx, data.rows[i].characterId, 1);
+              data.rows[i].favorite = favorite;
+              console.log('favorite:', favorite)
+          }
+
       }
 
       res.json(data);
@@ -98,7 +102,7 @@ class GameController {
           const data = await gameService.getLolPlayer(param);
           
           if(req.user !== null){
-              const favorite = await gameService.searchMyFavorite(req.user.idx, data.puuid);
+              const favorite = await gameService.searchMyFavorite(req.user.idx, data.puuid, 3);
               data.favorite = favorite;
               console.log('favorite:', favorite)
           }
