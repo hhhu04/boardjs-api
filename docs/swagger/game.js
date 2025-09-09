@@ -1,6 +1,11 @@
 /**
- * @swaggerswagger
+ * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     GameData:
  *       type: object
@@ -11,6 +16,45 @@
  *         status:
  *           type: integer
  *           description: 응답 상태 코드
+ *         favorite:
+ *           type: boolean
+ *           description: 즐겨찾기 여부 (로그인된 사용자만)
+ *     DNFCharacterList:
+ *       type: object
+ *       properties:
+ *         rows:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               characterId:
+ *                 type: string
+ *                 description: 캐릭터 ID
+ *               characterName:
+ *                 type: string
+ *                 description: 캐릭터명
+ *               level:
+ *                 type: integer
+ *                 description: 레벨
+ *               jobId:
+ *                 type: string
+ *                 description: 직업 ID
+ *               jobGrowId:
+ *                 type: string
+ *                 description: 전직 ID
+ *               jobName:
+ *                 type: string
+ *                 description: 직업명
+ *               jobGrowName:
+ *                 type: string
+ *                 description: 전직명
+ *               fame:
+ *                 type: integer
+ *                 description: 명성
+ *               favorite:
+ *                 type: boolean
+ *                 description: 즐겨찾기 여부 (로그인된 사용자만)
+ *           description: 캐릭터 목록
  *     MatchData:
  *       type: object
  *       properties:
@@ -22,15 +66,23 @@
  *     FavoriteRequest:
  *       type: object
  *       required:
- *         - game
- *         - nickname
+ *         - params
  *       properties:
- *         game:
- *           type: string
- *           description: 게임 종류
- *         nickname:
- *           type: string
- *           description: 닉네임
+ *         params:
+ *           type: object
+ *           required:
+ *             - game
+ *             - nickname
+ *           properties:
+ *             game:
+ *               type: string
+ *               description: 게임 종류
+ *             nickname:
+ *               type: string
+ *               description: 닉네임
+ *             player_id:
+ *               type: string
+ *               description: 플레이어 ID
  */
 
 /**
@@ -39,6 +91,9 @@
  *   get:
  *     summary: 사이퍼즈 유저 정보 조회
  *     tags: [Game - Cyphers]
+ *     security:
+ *       - bearerAuth: []
+ *       - {}
  *     parameters:
  *       - in: query
  *         name: nickname
@@ -52,7 +107,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/GameData'
+ *               $ref: '#/components/schemas/DNFCharacterList'
  *       400:
  *         description: 잘못된 요청
  *       500:
@@ -113,6 +168,9 @@
  *   get:
  *     summary: 던전앤파이터 캐릭터 정보 조회
  *     tags: [Game - DNF]
+ *     security:
+ *       - bearerAuth: []
+ *       - {}
  *     parameters:
  *       - in: query
  *         name: characterName
@@ -141,10 +199,77 @@
 
 /**
  * @swagger
+ * /api/game/dnf/timeline:
+ *   get:
+ *     summary: DNF 캐릭터 타임라인 조회
+ *     tags: [Game - DNF]
+ *     parameters:
+ *       - in: query
+ *         name: characterId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 캐릭터 ID
+ *       - in: query
+ *         name: serverId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 서버 ID
+ *     responses:
+ *       200:
+ *         description: DNF 캐릭터 타임라인
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GameData'
+ *       400:
+ *         description: 잘못된 요청
+ *       500:
+ *         description: 서버 오류
+ */
+
+/**
+ * @swagger
+ * /api/game/dnf/detail:
+ *   get:
+ *     summary: DNF 캐릭터 상세 정보 조회
+ *     tags: [Game - DNF]
+ *     parameters:
+ *       - in: query
+ *         name: characterId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 캐릭터 ID
+ *       - in: query
+ *         name: serverId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 서버 ID
+ *     responses:
+ *       200:
+ *         description: DNF 캐릭터 상세 정보
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GameData'
+ *       400:
+ *         description: 잘못된 요청
+ *       500:
+ *         description: 서버 오류
+ */
+
+/**
+ * @swagger
  * /api/game/lol:
  *   get:
  *     summary: 리그 오브 레전드 소환사 정보 조회
  *     tags: [Game - LoL]
+ *     security:
+ *       - bearerAuth: []
+ *       - {}
  *     parameters:
  *       - in: query
  *         name: gameName
