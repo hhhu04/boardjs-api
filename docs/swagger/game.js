@@ -300,7 +300,7 @@
  * @swagger
  * /api/game/lol/{puuid}:
  *   get:
- *     summary: LoL 매치 리스트 조회
+ *     summary: LoL 플레이어 매치 리스트 및 사용자 정보 조회
  *     tags: [Game - LoL]
  *     parameters:
  *       - in: path
@@ -309,13 +309,124 @@
  *         schema:
  *           type: string
  *         description: 플레이어 PUUID
+ *       - in: query
+ *         name: start
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: 시작 인덱스 (기본값 0)
  *     responses:
  *       200:
- *         description: LoL 매치 리스트
+ *         description: LoL 플레이어 매치 리스트 및 사용자 정보
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/MatchData'
+ *               type: object
+ *               properties:
+ *                 matchList:
+ *                   type: array
+ *                   description: 매치 상세 정보 목록 (최대 10개)
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       metadata:
+ *                         type: object
+ *                         properties:
+ *                           dataVersion:
+ *                             type: string
+ *                           matchId:
+ *                             type: string
+ *                           participants:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                       info:
+ *                         type: object
+ *                         properties:
+ *                           gameCreation:
+ *                             type: integer
+ *                           gameDuration:
+ *                             type: integer
+ *                           gameId:
+ *                             type: integer
+ *                           gameMode:
+ *                             type: string
+ *                           gameName:
+ *                             type: string
+ *                           gameType:
+ *                             type: string
+ *                           gameVersion:
+ *                             type: string
+ *                           mapId:
+ *                             type: integer
+ *                           participants:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 assists:
+ *                                   type: integer
+ *                                 championId:
+ *                                   type: integer
+ *                                 championName:
+ *                                   type: string
+ *                                 deaths:
+ *                                   type: integer
+ *                                 kills:
+ *                                   type: integer
+ *                                 puuid:
+ *                                   type: string
+ *                                 riotIdGameName:
+ *                                   type: string
+ *                                 riotIdTagline:
+ *                                   type: string
+ *                                 summoner1Id:
+ *                                   type: integer
+ *                                 summoner2Id:
+ *                                   type: integer
+ *                                 teamId:
+ *                                   type: integer
+ *                                 win:
+ *                                   type: boolean
+ *                           teams:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 teamId:
+ *                                   type: integer
+ *                                 win:
+ *                                   type: boolean
+ *                                 objectives:
+ *                                   type: object
+ *                 userInfo:
+ *                   type: object
+ *                   description: 소환사 정보
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: 소환사 ID
+ *                     accountId:
+ *                       type: string
+ *                       description: 계정 ID
+ *                     puuid:
+ *                       type: string
+ *                       description: 플레이어 PUUID
+ *                     name:
+ *                       type: string
+ *                       description: 소환사명
+ *                     profileIconId:
+ *                       type: integer
+ *                       description: 프로필 아이콘 ID
+ *                     revisionDate:
+ *                       type: integer
+ *                       description: 최종 수정일
+ *                     summonerLevel:
+ *                       type: integer
+ *                       description: 소환사 레벨
+ *       400:
+ *         description: 잘못된 요청 (유효하지 않은 PUUID)
  *       500:
  *         description: 서버 오류
  */

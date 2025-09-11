@@ -214,7 +214,12 @@ class GameService {
               matchList.push(response.data);
           }
 
-          return matchList;
+          let userInfo = await this.lolApiClient(`/lol/summoner/v4/summoners/by-puuid/${puuid}`, { params })
+
+          return {
+              matchList: matchList
+              , userInfo: userInfo.data
+          };
       }
       catch (error) {
           console.error('GameService - getLolPlayer error:', error.message);
