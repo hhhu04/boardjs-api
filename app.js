@@ -9,6 +9,7 @@ const swaggerUi = require('swagger-ui-express');
 
 var usersRouter = require('./routes/users');
 var gameRouter = require('./routes/game');
+var myPageRouter = require('./routes/myPage');
 
 var app = express();
 
@@ -57,5 +58,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api/user', usersRouter);
 app.use('/api/game', gameRouter);
+app.use('/api/mypage', myPageRouter)
 
 module.exports = app;
